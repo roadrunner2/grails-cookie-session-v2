@@ -449,6 +449,8 @@ class CookieSessionRepository implements SessionRepository, InitializingBean, Ap
     }
     catch( excp ){
       log.error "An error occurred while deserializing a session.", excp
+      if( log.isDebugEnabled() )
+        log.debug "Serialized-session: $serializedSession"
       session = null
     }
 
