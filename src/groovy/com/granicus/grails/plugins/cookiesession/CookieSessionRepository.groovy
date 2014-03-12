@@ -312,7 +312,7 @@ class CookieSessionRepository implements SessionRepository, InitializingBean, Ap
       def serializedSession = getDataFromCookie(request)
 
       if( serializedSession ){
-        session = deserializeSession(serializedSession)
+        session = deserializeSession(serializedSession, request)
       }
 
       def maxInactiveIntervalMillis = maxInactiveInterval * 1000;
@@ -404,7 +404,7 @@ class CookieSessionRepository implements SessionRepository, InitializingBean, Ap
     return serializedSession
   }
 
-  SerializableSession deserializeSession( String serializedSession ){
+  SerializableSession deserializeSession( String serializedSession, HttpServletRequest request ){
     log.trace "deserializeSession()"
 
     def session = null
@@ -450,7 +450,7 @@ class CookieSessionRepository implements SessionRepository, InitializingBean, Ap
     catch( excp ){
       log.error "An error occurred while deserializing a session.", excp
       if( log.isDebugEnabled() )
-        log.debug "Serialized-session: $serializedSession"
+        log.debug "Serialized-session: '$serializedSession'\nrequest-uri: ${request.requestURI}${request.headerNames.toList().inject('') { str, name -> request.getHeaders(name).inject(str) { str2, val -> "$str2\n$name: $val" } }}"
       session = null
     }
 
