@@ -354,12 +354,8 @@ class CookieSessionRepository implements SessionRepository, InitializingBean, Ap
 
     String serializedSession = serializeSession(session) 
    
-    def requestCookieCount = cookieCount
-    if( response instanceof SessionRepositoryResponseWrapper )
-      requestCookieCount = response.request?.cookies?.count{ it.name.startsWith(cookieName) } 
-
     if( session.isValid )
-      putDataInCookie(response, serializedSession, requestCookieCount )
+      putDataInCookie(response, serializedSession )
     else
       deleteCookie(response)
   }
@@ -503,7 +499,7 @@ class CookieSessionRepository implements SessionRepository, InitializingBean, Ap
     return data 
   }
 
-  void putDataInCookie(HttpServletResponse response, String value, def requestCookieCount ){
+  void putDataInCookie(HttpServletResponse response, String value ){
     log.trace "putDataInCookie() - ${value.size()}"
 
     // the cookie's maxAge will either be -1 or the number of seconds it should live for
@@ -523,7 +519,7 @@ class CookieSessionRepository implements SessionRepository, InitializingBean, Ap
         response.addCookie(c)
         log.trace "added session ${cookieName}-${i} to response"
       }
-      else if( i < requestCookieCount )
+      else
       {
         // create a delete cookie
         Cookie c = createCookie(i, '', 0) 
