@@ -4,6 +4,8 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.project.target.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
+grails.project.dependency.resolver = "maven"
+
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
@@ -24,9 +26,9 @@ grails.project.dependency.resolution = {
     
         //compile ':spring-security-core:1.2.7.3'
 
-        build(":release:2.0.4") {
+        build(":release:3.0.1", ":rest-client-builder:1.0.3") {
             export = false
-            exclude 'spock'
+            excludes 'spock', "svn"
         }
 
         compile(":webxml:1.4.1"){
